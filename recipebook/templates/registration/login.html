@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+    Login
+{% endblock title %}
+{% block content %}
+    <div class="auth-container">
+        <h1>Recipe Book Login</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="auth-buttons">Login</button>
+        </form>
+        <br>
+        <a href="{% url 'password_reset' %}">Forgot Password</a>
+    </div>
+{% endblock content %}

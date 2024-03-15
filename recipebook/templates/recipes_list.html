@@ -1,65 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipes List</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f7f7f7;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: #333;
-        }
-        .container {
-            width: 100%;
-            max-width: 600px;
-            margin: 20px;
-            padding: 40px;
-            background-color: #E5E4E2;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            font-size: 32px;
-            color: #000;
-            margin-bottom: 20px;
-        }
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-        li {
-            background-color: #fff;
-            margin-bottom: 10px;
-            padding: 15px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s ease-in-out;
-        }
-        li:hover {
-            transform: translateY(-3px);
-        }
-        a {
-            text-decoration: none;
-            color: #007aff;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Recipes List</h1>
-        <ul>
-            {% for x in object_list %}
-                <li><h2><a href="/ledger/recipe/{{x.pk}}">{{x.name}}</a></h2></li>
-            {% endfor %}
-        </ul>
-    </div>
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{object.name}}{% endblock %}
+
+{% block head %}{{object.name}} Detail{% endblock %}
+
+{% block content %}
+
+    <h2>{{object.name}}</h2>
+    <h5>Author: {{object.author.name}}</h5>
+    <h5>Created On: {{ object.created_on }}</h5>
+    <h5>Updated On: {{ object.updated_on }}</h5>
+    <h3>Ingredients</h3>
+    {% for ingredient in object.ingredients.all %}
+        <li>{{ingredient.ingredient.name}}, <span class="italic">{{ingredient.quantity}}</span></li>
+    {% endfor %}
+
+    <a href="{% url 'ledger:recipes' %}" class="go-back-button">
+        Go back to Recipe Book
+    </a>
+
+{% endblock %}
