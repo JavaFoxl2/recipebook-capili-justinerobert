@@ -1,30 +1,50 @@
 from django.contrib import admin
 
-from .models import *
+from .models import Recipe, Ingredient, RecipeIngredient, RecipeImage
 
-class RecipeIngredientInLine(admin.TabularInline):
+
+class RecipeIngredientInline(admin.TabularInline):
     model = RecipeIngredient
-    fields = ['ingredient', 'quantity', 'recipe']
+
+class RecipeImageInline(admin.TabularInline):
+    model = RecipeImage
 
 class RecipeAdmin(admin.ModelAdmin):
     model = Recipe
-
-    search_fields = ('name',)
-    list_display = ('name',)
-
-    inlines = [RecipeIngredientInLine]
-
-admin.site.register(Recipe, RecipeAdmin)
+    inlines = [RecipeIngredientInline, RecipeImageInline]
 
 class IngredientAdmin(admin.ModelAdmin):
     model = Ingredient
 
-    search_fields = ('name',)
-    list_display = ('name',)
+class RecipeIngredientAdmin(admin.ModelAdmin):
+    model = RecipeIngredient
+    list_display = ['ingredient', 'quantity', 'recipe']
+    search_fields = ['ingredient', 'quantity', 'recipe']
+    list_filter = ['recipe']
 
-    inlines = [RecipeIngredientInLine]
+    fieldsets = [
+        ('Details', {
+            'fields' : [
+                ('ingredient', 'quantity', 'recipe')
+            ]
+        })
+    ]
 
+class RecipeImageAdmin(admin.ModelAdmin):
+    model = RecipeImage
+    list_display = ['recipe_image', 'description', 'recipe']
+    search_fields = ['description', 'recipe']
+    list_filter = ['recipe']
 
+    fieldsets = [
+        ('Details', {
+            'fields' : [
+                ('recipe_image', 'description', 'recipe')
+            ]
+        })
+    ]
+    
+admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(Ingredient, IngredientAdmin)
-
-# Register your models here.
+admin.site.register(RecipeIngredient, RecipeIngredientAdmin)
+admin.site.register(RecipeImage, RecipeImageAdmin)
