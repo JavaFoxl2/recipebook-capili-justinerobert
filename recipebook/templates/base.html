@@ -1,171 +1,42 @@
-<!-- base.html -->
+{% load static %}
+
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %}</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: rgba(0, 0, 0, 0.01);
-        }
-        .header {
-            background: #fff;
-            box-shadow: 0 2px 3px -2px gray;
-            padding: 7px 20px 7px;
-            position: relative;
-        }
-        .header h1 {
-            margin-top: 0;
-            margin-bottom: 0;
-            text-transform: uppercase;
-        }
-        .authentication {
-            position: absolute;
-            right: 20px;
-            top: 3.75%;
-            transform: translateY(-50%);
-        }
-        .buttons {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: red;
-            border: none;
-            text-transform: uppercase;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-        .auth-container {
-            background: #fff;
-            padding: 2px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 350px;
-            height: 300px;
-            margin: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .auth-container h1 {
-            margin: 0;
-            padding: 0;
-        }
-        .auth-buttons {
-            background-color: #3aafdc;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            text-transform: uppercase;
-            width: calc(100% - 20px);
-            margin: 10px 0;
-        }
-        .recipe-button {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #ffca28;
-            border: none;
-            padding: 10px 15px;
-            margin: 10px 0;
-            color: white;
-            font-weight: bold;
-            display: block;
-            width: 70px;
-            text-align: center;
-            font-size: 14px;
-            border-radius: 4px;
-            text-decoration: none;
-        }
-        .go-back-button {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #808080;
-            display: inline-block;
-            padding: 10px;
-            margin-top: 20px;
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-            border-radius: 5px;
-            text-align: center;
-        }
-        #content {
-            padding: 20px;
-        }
-        h2 {
-            font-family: 'Segoe UI', sans-serif;
-            margin-bottom: 1px;
-            padding-bottom: 1px;
-            margin-top: 1px;
-            padding-top: 1px;
-            color: #ffca28;
-        }
-        h3 {
-            font-family: 'Segoe UI', sans-serif;
-            margin-bottom: 1px;
-            padding-bottom: 1px;
-            margin-top: 10px;
-            padding-top: 10px;
-        }
-        h4 {
-            font-family: 'Segoe UI', sans-serif;
-            margin-top: 5;
-            padding-left: 20px;
-            margin-bottom: 0;
-            padding-bottom: 0px;
-            color: #555;
-            text-decoration: underline;
-        }
-        h5 {
-            font-family: 'Segoe UI', sans-serif;
-            margin-bottom: 1px;
-            padding-bottom: 1px;
-            margin-top: 1px;
-            padding-top: 1px;
-            color: #555;
-        }
-        ul {
-            font-family: 'Segoe UI', sans-serif;
-            list-style-type: none;
-            padding: 0;
-        }
-        ul li {
-            margin-bottom: 10px;
-        }
-        .italic {
-            font-style: italic;
-        }
-    </style>
-    {% block extra_styles %}{% endblock %}
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% endblock %} | Recipe Book</title>
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  {% block styles %}{% endblock %}
 </head>
+
 <body>
+  <header>
+    <h1><a href="{% url 'ledger:recipes_list' %}">Recipe Book</a></h1>
+    <h1>{% block header %}{% endblock %}</h1>
+  </header>
+  <div id="content">
+    {% block content %}{% endblock %}
+
+    <!-- LOGIN/LOGOUT BUTTON -->
     {% if request.user.is_authenticated %}
-        <div class="header">
-            <h1>Recipe Book</h1>
-        </div>
-        <div class="authentication">
-            <form method="POST" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit" class="buttons">Log out</button>
-            </form>
-        </div>
-        <h4>You are now viewing: {% block head %}{% endblock %}</h4>
+    <form action="{% url 'logout' %}" method="post">
+      {% csrf_token %}
+      <button type="submit">Logout</button>
+    </form>
+    {% else %}
+    {% if request.get_full_path != '/accounts/login/' %}
+    <form action="{% url 'login' %}" method="post">
+      {% csrf_token %}
+      <button type="submit">Login</button>
+    </form>
     {% endif %}
-    
-    <div id="content">
-        {% block content %}{% endblock %}
-    </div>
+    {% endif %}
+
+  </div>
+  {% block scripts %}{% endblock %}
 </body>
+
 </html>

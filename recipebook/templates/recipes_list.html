@@ -1,23 +1,19 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{object.name}}{% endblock %}
-
-{% block head %}{{object.name}} Detail{% endblock %}
+{% block title %}Recipe List{% endblock %}
+{% block header %}Recipe List{% endblock %}
+{% block styles %}{% endblock %}
 
 {% block content %}
-
-    <h2>{{object.name}}</h2>
-    <h5>Author: {{object.author.name}}</h5>
-    <h5>Created On: {{ object.created_on }}</h5>
-    <h5>Updated On: {{ object.updated_on }}</h5>
-    <h3>Ingredients</h3>
-    {% for ingredient in object.ingredients.all %}
-        <li>{{ingredient.ingredient.name}}, <span class="italic">{{ingredient.quantity}}</span></li>
-    {% endfor %}
-
-    <a href="{% url 'ledger:recipes' %}" class="go-back-button">
-        Go back to Recipe Book
-    </a>
-
+<ul>
+  {% for recipe in object_list %}
+  <li>
+    <a href="{{ recipe.get_absolute_url }}">{{ recipe.name }}</a>
+  </li>
+  {% endfor %}
+</ul>
+{% if request.user.is_authenticated %}
+<a href="{% url 'ledger:recipe_add' %}">Add a Recipe</a>
+{% endif %}
 {% endblock %}

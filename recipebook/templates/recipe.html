@@ -1,16 +1,24 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Recipe Book{% endblock %}
-
-{% block head %}Recipe Book List View{% endblock %}
+{% block title %}{{ object.name }}{% endblock %}
+{% block header %}Recipe Details{% endblock %}
+{% block styles %}{% endblock %}
 
 {% block content %}
+<h2>{{ object.name }} by {{ object.author }}</h2>
 
-    <ul>
-    {% for recipe in object_list %}
-        <li><a href="{{ recipe.get_absolute_url }}" class="recipe-button">{{ recipe.name }}</a></li>
-    {% endfor %}
-    </ul>
+{% for image in object.recipe_image.all %}
+{% if image.recipe_image %}
+<img src="{{ image.recipe_image.url }}" alt="{{ image.description }}">
+{% endif %}
+{% endfor %}
+<h4><a href="{{ object.get_add_image_url }}">add image to {{ object.name }}</a></h4>
 
+<h2>Ingredients:</h2>
+<ul>
+  {% for ingredient in object.ingredients.all %}
+  <li>{{ ingredient.ingredient.name }}, {{ ingredient.quantity }}</li>
+  {% endfor %}
+</ul>
 {% endblock %}
